@@ -11,8 +11,10 @@ int		ft_strlen(char *s)
 int		resize(char **line, int len)
 {
 	int		i = 0;
-	char	*ret = malloc(len + BUFFER_SIZE + 1);
-
+	char	*ret = 0;
+	
+	if (!(ret = malloc(len + BUFFER_SIZE + 1)))
+		return (0);
 	while (i < len)
 	{
 		ret[i] = (*line)[i];
