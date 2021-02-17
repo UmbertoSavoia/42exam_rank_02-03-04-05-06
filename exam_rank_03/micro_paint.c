@@ -73,13 +73,15 @@ int		main(int argc, char **argv)
 					if ((float)x - g_r.start_x < 1.0000000 || (g_r.start_x + g_r.width) - (float)x < 1.0000000 ||
 						(float)y - g_r.start_y < 1.0000000 || (g_r.start_y + g_r.height) - (float)y < 1.0000000)
 					{
-						if ((float)x >= g_r.start_x && (float)x <= g_r.start_x + g_r.width && (float)y >= g_r.start_y && (float)y <= g_r.start_y + g_r.height)
+						if ((float)x >= g_r.start_x && (float)x <= g_r.start_x + g_r.width &&
+							(float)y >= g_r.start_y && (float)y <= g_r.start_y + g_r.height)
 							g_b.matrix[y * g_b.width + x] = g_r.color;
 					}
 				}
 				else if (g_r.type == 'R')
 				{
-					if ((float)x >= g_r.start_x && (float)x <= g_r.start_x + g_r.width && (float)y >= g_r.start_y && (float)y <= g_r.start_y + g_r.height)
+					if ((float)x >= g_r.start_x && (float)x <= g_r.start_x + g_r.width &&
+						(float)y >= g_r.start_y && (float)y <= g_r.start_y + g_r.height)
 						g_b.matrix[y * g_b.width + x] = g_r.color;
 				}
 				x++;
