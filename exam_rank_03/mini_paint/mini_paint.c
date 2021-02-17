@@ -72,7 +72,7 @@ int		main(int argc, char **argv)
 			while (x < g_b.width)
 			{
 				distance = sqrtf(powf(x - g_c.center_x, 2.) + powf(y - g_c.center_y, 2.));
-				if (distance <= g_b.c)
+				if (distance <= g_c.r)
 				{
 					if (g_c.type == 'c')
 					{
