@@ -1,18 +1,17 @@
 #include <unistd.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <math.h>
+#include <string.h>
+#include <stdio.h>
 
-typedef struct	s_b
+typedef struct	s_background
 {
 	int		width;
 	int		height;
-	char	c;
-	char	*matrix;
-}				t_b;
+	char	bc;
+}				t_background;
 
-typedef struct	s_r
+typedef struct	s_rectangle
 {
 	char	type;
 	float	start_x;
@@ -20,10 +19,11 @@ typedef struct	s_r
 	float	width;
 	float	height;
 	char	color;
-}				t_r;
+}				t_rectangle;
 
-t_b		g_b;
-t_r		g_r;
+t_background	b;
+t_rectangle		r;
+char*			image;
 
 int		ft_puterror(char *s, int fr)
 {
@@ -32,17 +32,17 @@ int		ft_puterror(char *s, int fr)
 	while (s && s[i]) i++;
 	write(1, s, i);
 
-	if (fr) free(g_b.matrix);
-
+	if (fr) free(image);
 	return (1);
 }
 
 int		main(int argc, char **argv)
 {
 	FILE	*file = 0;
-	int		check = 0;
 	int		x = 0;
 	int		y = 0;
+	int		size = 0;
+	float	check = 1.0000000;
 
 	if (argc != 2)
 		return (ft_puterror("Error: argument\n", 0));
@@ -50,56 +50,56 @@ int		main(int argc, char **argv)
 	if (!(file = fopen(argv[1], "r")))
 		return (ft_puterror("Error: Operation file corrupted\n", 0));
 
-	if (fscanf(file, "%d %d %c\n", &g_b.width, &g_b.height, &g_b.c) != 3)
+	if (fscanf(file, "%d %d %c\n", &b.width, &b.height, &b.bc) != 3)
 		return (ft_puterror("Error: Operation file corrupted\n", 0));
 
-	if (!(0 < g_b.width && g_b.width <= 300 && 0 < g_b.height && g_b.height <= 300 ))
+	if (!(0 < b.width && b.width <= 300 && 0 < b.height && b.height <= 300))
 		return (ft_puterror("Error: Operation file corrupted\n", 0));
 
-	g_b.matrix = malloc(g_b.width * g_b.height);
-	memset(g_b.matrix, g_b.c, (g_b.width * g_b.height));
-	check = fscanf(file, "%c %f %f %f %f %c\n", &g_r.type, &g_r.start_x, &g_r.start_y, &g_r.width, &g_r.height, &g_r.color);
+	image = malloc(b.width * b.height);
+	memset(image, b.bc, (b.width * b.height));
 
-	while (check == 6)
+	size = fscanf(file, "%c %f %f %f %f %c\n", &r.type, &r.start_x, &r.start_y, &r.width, &r.height, &r.color);
+	while (size == 6)
 	{
-		if (!(g_r.width > 0 && g_r.height > 0) || !(g_r.type == 'R' || g_r.type == 'r'))
+		if (!(r.width > 0 && r.height > 0) || !(r.type == 'r' || r.type == 'R'))
 			return (ft_puterror("Error: Operation file corrupted\n", 1));
 
 		y = 0;
-		while (y < g_b.height)
+		while (y < b.height)
 		{
 			x = 0;
-			while (x < g_b.width)
+			while (x < b.width)
 			{
-				if (g_r.type == 'r')
+				if (r.type == 'r')
 				{
-					if ((float)x - g_r.start_x < 1.0000000 || (g_r.start_x + g_r.width) - (float)x < 1.0000000 ||
-						(float)y - g_r.start_y < 1.0000000 || (g_r.start_y + g_r.height) - (float)y < 1.0000000)
+					if (x - r.start_x < check || (r.start_x + r.width) - x < check ||
+						y - r.start_y < check || (r.start_y + r.height) - y < check)
 					{
-						if ((float)x >= g_r.start_x && (float)x <= g_r.start_x + g_r.width &&
-							(float)y >= g_r.start_y && (float)y <= g_r.start_y + g_r.height)
-							g_b.matrix[y * g_b.width + x] = g_r.color;
+						if (r.start_x <= x && x <= (r.start_x + r.width) &&
+							r.start_y <= y && y <= (r.start_y + r.height))
+							image[y * b.width + x] = r.color;
 					}
 				}
-				else if (g_r.type == 'R')
+				else if (r.type == 'R')
 				{
-					if ((float)x >= g_r.start_x && (float)x <= g_r.start_x + g_r.width &&
-						(float)y >= g_r.start_y && (float)y <= g_r.start_y + g_r.height)
-						g_b.matrix[y * g_b.width + x] = g_r.color;
+					if (r.start_x <= x && x <= (r.start_x + r.width) &&
+						r.start_y <= y && y <= (r.start_y + r.height))
+						image[y * b.width + x] = r.color;
 				}
 				x++;
 			}
 			y++;
 		}
-		check = fscanf(file, "%c %f %f %f %f %c\n", &g_r.type, &g_r.start_x, &g_r.start_y, &g_r.width, &g_r.height, &g_r.color);
+		size = fscanf(file, "%c %f %f %f %f %c\n", &r.type, &r.start_x, &r.start_y, &r.width, &r.height, &r.color);
 	}
 
-	if (check == -1)
+	if (size == -1)
 	{
 		y = 0;
-		while (y < g_b.height)
+		while (y < b.height)
 		{
-			write(1, g_b.matrix + y * g_b.width, g_b.width);
+			write(1, image + y * b.width , b.width);
 			write(1, "\n", 1);
 			y++;
 		}
@@ -107,6 +107,6 @@ int		main(int argc, char **argv)
 	else
 		return (ft_puterror("Error: Operation file corrupted\n", 1));
 
-	free(g_b.matrix);
+	free(image);
 	fclose(file);
 }
