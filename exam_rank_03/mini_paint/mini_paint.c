@@ -63,7 +63,7 @@ int		main(int argc, char **argv)
 	while(check == 5)
 	{
 		if (!(g_c.r > 0) || !(g_c.type == 'c' || g_c.type == 'C'))
-			return (ft_puterror("--Error: Operation file corrupted\n", 1));
+			return (ft_puterror("Error: Operation file corrupted\n", 1));
 
 		y = 0;
 		while (y < g_b.height)
