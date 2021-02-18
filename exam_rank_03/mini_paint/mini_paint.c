@@ -53,7 +53,7 @@ int		main(int argc, char **argv)
 	if (fscanf(file, "%d %d %c\n", &g_b.width, &g_b.height, &g_b.c) != 3)
 		return (ft_puterror("Error: Operation file corrupted\n", 0));
 
-	if (!(0 <= g_b.width && g_b.width <= 300 && 0 <g_b.height && g_b.height <= 300))
+	if (!(0 < g_b.width && g_b.width <= 300 && 0 < g_b.height && g_b.height <= 300))
 		return (ft_puterror("Error: Operation file corrupted\n", 0));
 
 	g_b.matrix = malloc(g_b.width * g_b.height);
